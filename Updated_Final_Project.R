@@ -1,10 +1,20 @@
 #Group 2: Leah O'Rourke, Amber Johnson, Jayro Perez
 
+install.packages("tidyverse")
+install.packages("shiny")
+install.packages("patentsview")
+install.packages("shinydashboard")
+install.packages("DT")
+install.packages("dplyr")
+install.packages("tidyr")
+
 library(tidyverse)
 library(shiny)
 library(patentsview)
 library(shinydashboard)
 library(DT)
+library(dplyr)
+library(tidyr)
 
 
 #Objective 1 - summarize statistics
@@ -257,34 +267,34 @@ project_ui = dashboardPage(
       tabItem(tabName = "Objective_1",
               h2(strong("Objective 1")),
               h4("Show the following summary statistics:
-                  the nubmer of patents, 
-                  the number of unique assignees,
-                  and the number of unique inventors"),
+                 the nubmer of patents, 
+                 the number of unique assignees,
+                 and the number of unique inventors"),
               mainPanel(
-                  fluidRow(
+                fluidRow(
                   verbatimTextOutput("summary")))), 
       tabItem(tabName = "Objective_2",
               h2(strong("Objective 2")),
               h4("Represent patents in a data table with at least the following columns:
-                  patent_number, patent_date, inventor_last_name, inventor_city,
+                 patent_number, patent_date, inventor_last_name, inventor_city,
                  assignee_organization, and assignee_lastknown_state"),
               mainPanel(
-                  h2("Patent Data Table"),
-                  dataTableOutput("Patent_Table"))), 
+                h2("Patent Data Table"),
+                dataTableOutput("Patent_Table"))), 
       tabItem(tabName = "Objective_3",
               h2(strong("Objective 3")),
               h4("Use a bar plot to show the top 5 assignee organizations 
-                  in term of number of granted patents"),
+                 in term of number of granted patents"),
               mainPanel(
-                  dataTableOutput("top5"),
-                  plotOutput("plot"))),
+                dataTableOutput("top5"),
+                plotOutput("plot"))),
       tabItem(tabName = "Objective_4",
               h2(strong("Objective 4")),
               h4("Use a dropdown box to select the state of assignee organizations"),
               mainPanel(
                 fluidRow(
                   selectInput("state","State:",
-                         c("All",unique(as.character(unnest_patent$assignee_lastknown_state)))),
+                              c("All",unique(as.character(unnest_patent$assignee_lastknown_state)))),
                   dataTableOutput("table")))),
       tabItem(tabName = "Objective_5",
               h2(strong("Objective 5")),
@@ -313,41 +323,41 @@ project_ui = dashboardPage(
               h4("MO5: Which patents have been cited by more than 10 patents?"),
               mainPanel(dataTableOutput("Result_query")))
       )
-    )
-  ) 
+      )
+) 
 
 #----------------------------------------------------Server---------------------------------------------------------------
 
 test_server = function (input, output) {
   #Core Objective 1 Output
   output$summary = renderPrint({
-    Object1 = cat("The number of patents is:", Num_Patents, "The number of assignees is:", Num_Assignees,
-                  "The number of inventors is:", Num_Inventors, sep ="\n")
+    Object1 = cat("The number of patents is:",total_patent , "The number of assignees is:", total_assignee,
+                  "The number of inventors is:", total_inventor, sep ="\n")
     return(Object1)
-    })
+  })
   
   #Core Objective 2 Output
   output$Patent_Table = renderDataTable(
     return(unnest_patent))
- 
+  
   #Core Objective 3 Output
   output$top5 = renderDataTable(
     return(top))
- 
-   #Core Objective 3 Plot Output
+  
+  #Core Objective 3 Plot Output
   output$plot = renderPlot(
     barplot(top_5_results, col = color))
- 
-   #Core Objective 4 Output
+  
+  #Core Objective 4 Output
   output$table = renderDataTable(datatable({
     data <- object_45
     if (input$state != "All") {
       data <- data[data$assignee_lastknown_state == input$state,]
     }
-   data
-    }))
- 
-   #core Objective 5 Output
+    data
+  }))
+  
+  #core Objective 5 Output
   output$table1 <- renderDataTable(
     datatable({
       data2 <- object_45
@@ -362,9 +372,9 @@ test_server = function (input, output) {
   
   #Menu Objective 3
   #output$top5count = renderDataTable(
-   # return(top_country_5))
- 
-   #Menu Objective 4
+  # return(top_country_5))
+  
+  #Menu Objective 4
   output$Assignee10 = renderDataTable(
     return(assignee_organizations))
   
