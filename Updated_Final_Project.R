@@ -1,5 +1,3 @@
-#Group 2: Leah O'Rourke, Amber Johnson, Jayro Perez
-
 install.packages("tidyverse")
 install.packages("shiny")
 install.packages("patentsview")
